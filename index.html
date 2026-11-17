@@ -3,9 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
     <title>365</title>
   </head>
   <body>
     <h1>365</h1>
+    <p id="today">Today</p>
+    <ul id="task-list">
+      <li label="Study 1 hour">
+        Study 1 hour
+        <input type="checkbox" />
+      </li>
+      <li label="Workout">
+        Workout
+        <input type="checkbox" />
+      </li>
+      <li label="Read 10 pages">
+        Read 10 pages
+        <input type="checkbox" />
+      </li>
+    </ul>
+    <input type="text" id="new-task" placeholder="Add a new task..." />
+    <button id="add-btn">Add-Task</button>
+    <script src="js/app.js"></script>
   </body>
 </html>
