@@ -154,13 +154,16 @@ Model: a structured copy of the page that JS can work with.
 its an live model in browser for HTML which helps JS to read it and change/edit it.
 
 - **Why do we change the array first and call `render()` after?**
-~~ Cuz as you see in code the function: 'render()' erases the data fully if not saved. we puted it after the array change because so we can save it in the 'tasks' array and which doesn't remove to base task after refresh
+~~ Cuz as you see in code the function: 'render()' does not erases the data fully it only erases the cards (things that are on screen seenable things) and then recreate the base array form. 
+Array is real data while page is just picture of it. 'render()' draws whatever the array says at that moment.
+If you call it before the push, it draws the old list and your new task doesn’t appear. 
 
 - **Why does `localStorage` need `JSON.stringify`?**
 ~~ 'localStorage' reads the saved text but we have array which causes the data-type error .So , we use 'JSON.stringify' to convert the array to the text. (which later helps with saved it in 'localStorage')
 
 - **The hardest moment today was:**
-~~ the hardest part was to create the function and using loops inside it cuz its totaly different than python function and loop.also knowing what & where to write .EX: cuz if we write the 'saveTasks()' function after the 'render()' function cuz it will remove all the things first then save which literally won't help a inch (unit you want to erase all the data)
+~~ the hardest part was to create the function and using loops inside it cuz its totaly different than python function and loop.
+Also knowing what & where to write, EX: cuz if we write the 'saveTasks()' function before the change command (tasks.push(....)) cuz it will save the task before it was changed and nothing would showup on the page if you refresh it again.
 
 ## Mistakes and fixes
 
