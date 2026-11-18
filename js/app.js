@@ -15,11 +15,10 @@ function fn() {
     if (!taskText) {return ;}
     const li = document.createElement("li");
     const label = document.createElement("label")
-    const input = document.createElement("checkbox")
+    const input = document.createElement("input")
 
     input.type = "checkbox"
-    input.TEXT_NODE = taskText.textContent
-    label.appendChild(input,`${taskText}`);
+    label.append(`${taskText}`,input);
     li.appendChild(label);
     taskList.appendChild(li);
 
