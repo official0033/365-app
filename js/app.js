@@ -14,13 +14,17 @@ function fn() {
     const taskText = newTask.value.trim();
     if (!taskText) {return ;}
     tasks.push({text:taskText, done:false})
+    saveTasks()
     render()
 
     newTask.value = "";
 }
 
 let tasks = [{text:"Study 1 hour", done:false}, {text:"Workout", done:false}, {text:"Read a book", done:false}];
-
+const saved = localStorage.getItem("tasks");
+if (saved) {
+    tasks = JSON.parse(saved);
+}
 function render(){
     taskList.innerHTML = "";
     tasks.forEach((task) => {
@@ -32,12 +36,18 @@ function render(){
         input.checked = task.done;
         input.addEventListener("change", () => {
             task.done = input.checked;
+            saveTasks()
         })
         label.append(`${task.text}`,input);
         li.appendChild(label);
         taskList.appendChild(li);
 
     })
+}
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
 }
 
 render()
