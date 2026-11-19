@@ -55,3 +55,5 @@ body {
     background: #af1c1c;
   color: #fff;
 }
+
+#progress { font-weight: 600; }
