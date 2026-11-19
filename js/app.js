@@ -83,7 +83,7 @@ function saveHistory(){
 function getStats() {
   const total = tasks.length;
   const doneCount = tasks.filter((task) => task.done).length;
-  const ratio = total === 0 ? 0 : doneCount / total;
+  const ratio = total === 0 ? 0 : doneCount / total; // its same like python: 0 if total == 0 else doneCount / total
   return {
     doneCount,
     total,
@@ -96,7 +96,7 @@ function updateToday() {
   const s = getStats();
   history[getTodayKey()] = { done: s.doneCount, total: s.total, counts: s.counts };
   saveHistory();
-  progressEl.textContent = `${s.percent}% done, ${s.counts ? "today counts" : "keep going"}`;}
+  progressEl.textContent = `${s.percent}% done, ${s.counts ? "today counts ✅" : "keep going"}`;}
 
 render()
 updateToday()

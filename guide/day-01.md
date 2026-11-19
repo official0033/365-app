@@ -165,7 +165,7 @@ If you call it before the push, it draws the old list and your new task doesn’
 ~~ the hardest part was to create the function and using loops inside it cuz its totaly different than python function and loop.
 Also knowing what & where to write, EX: cuz if we write the 'saveTasks()' function before the change command (tasks.push(....)) cuz it will save the task before it was changed and nothing would showup on the page if you refresh it again.
 
-## Mistakes and fixes
+## Common Mistakes
 
 | Mistake | Fix |
 |---|---|
