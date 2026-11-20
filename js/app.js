@@ -7,25 +7,33 @@ todayEl.textContent = date.toLocaleDateString("en-GB", {
     weekday:"short" , day:"numeric", month:"short" , year:"numeric"
 })
 
-function getTodayKey() {
-    const now = new Date()
-    const year = now.getFullYear()
-    const month = String(now.getMonth() + 1).padStart(2,"0")
-    const day = String(now.getDate()).padStart(2,"0")
+function dateToKey(date) {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2,"0")
+    const day = String(date.getDate()).padStart(2,"0")
 
     return `${year}-${month}-${day}`;
+}
+function getTodayKey() {
+    return (dateToKey(new Date()));
+}
+function shiftKey(key, days) {
+    const [y,m,d] = key.split("-").map(Number);
+    const date = new Date(y, m-1 ,d)
+    date.setDate(date.getDate() + days)
+    return dateToKey(date); 
 }
 
 const newTask = document.getElementById("new-task")
 const addBtn = document.getElementById("add-btn")
 const taskList = document.getElementById("task-list")
 
-addBtn.addEventListener("click", fn)
+addBtn.addEventListener("click", fn);
 
 function fn() {
     const taskText = newTask.value.trim();
     if (!taskText) {return ;}
-    tasks.push({text:taskText, done:false})
+    tasks.push({text:taskText, done:false, startDate: getTodayKey()})
     saveTasks()
     render()
 
@@ -37,10 +45,15 @@ const saved = localStorage.getItem("tasks");
 if (saved) {
     tasks = JSON.parse(saved);
 }
+tasks.forEach((task) => {
+    if (!task.startDate) {
+        task.startDate = getTodayKey();
+    }  
+})
 
 let history = {}
 const histSave = localStorage.getItem("history")
-if (histSave){
+if (histSave) {
     history = JSON.parse(histSave);
 }
 const lastDate = localStorage.getItem("lastDate");
