@@ -95,3 +95,4 @@ body {
 
 #rest-yes { background: #c0392b; color: #fff; }
 #rest-no { background: #ddd; color: #333; }
+.rest-btn:disabled { opacity: 0.4; }

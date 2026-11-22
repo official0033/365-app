@@ -11,8 +11,9 @@ const restConfirm = document.getElementById("rest-confirm");
 const restMsg = document.getElementById("rest-msg");
 const restYes = document.getElementById("rest-yes");
 const restNo = document.getElementById("rest-no");
+const restUndoBtn = document.getElementById("rest-undo-btn");
 
-//codes for Rest day only.
+//codes for Rest day buttons only.
 let pendingKey = null;
 restTodayBtn.addEventListener("click", () => {
     pendingKey = getTodayKey();
@@ -21,7 +22,7 @@ restTodayBtn.addEventListener("click", () => {
 });
 restTomorrowBtn.addEventListener("click",() => {
     pendingKey = shiftKey(getTodayKey(),1);
-    restMsg.textContent = "Use a rest day for tomorrow? This cannot be undone.";
+    restMsg.textContent = "Use a rest day for tomorrow?";
     restConfirm.hidden = false;
 });
 restNo.addEventListener("click",() => {
@@ -34,6 +35,10 @@ restYes.addEventListener("click",() => {
     pendingKey = null;
     updateRestUI();
 });
+restUndoBtn.addEventListener("click",() => {
+    removeRestDay(shiftKey(getTodayKey(),1));
+    updateRestUI();
+})
 //..............................................................
 
 todayEl.textContent = date.toLocaleDateString("en-GB", {
@@ -89,17 +94,16 @@ const histSave = localStorage.getItem("history")
 if (histSave) {
     history = JSON.parse(histSave);
 }
+let restDays = [];
+const restSave = localStorage.getItem("restDays");
+if (restSave) {
+    restDays = JSON.parse(restSave)
+}
 const lastDate = localStorage.getItem("lastDate");
 if (lastDate !== getTodayKey()) {
     tasks.forEach((task) => task.done = false);
     localStorage.setItem("lastDate", getTodayKey());
     saveTasks()
-}
-
-let restDays = [];
-const restSave = localStorage.getItem("restDays");
-if (restSave) {
-    restDays = JSON.parse(restSave)
 }
 
 
@@ -161,9 +165,21 @@ function addRestDay(key) {
     saveRestDays();
     return true;
 }
+function removeRestDay(key) {
+    if (key !== shiftKey(getTodayKey(),1)) {return false;}
+    if (!restDays.includes(key)) {return false;}
+    restDays = restDays.filter((d) => d !== key);
+    saveRestDays();
+    return true;
+}
 function updateRestUI() {
     const left = MAX_REST - restUsedInMonth(getTodayKey());
     restInfo.textContent = `Rest days left this month: ${left} of ${MAX_REST}`;
+    const todayKey = getTodayKey();
+    const tomorrowKey = shiftKey(getTodayKey(),1);
+    restTodayBtn.disabled = getStats().counts || restDays.includes(todayKey) || restUsedInMonth(todayKey) >= MAX_REST
+    restTomorrowBtn.disabled = restDays.includes(tomorrowKey) || restUsedInMonth(tomorrowKey) >= MAX_REST
+    restUndoBtn.hidden = !restDays.includes(tomorrowKey);
 }
 //........................................................
 
@@ -184,6 +200,7 @@ function updateToday() {
   history[getTodayKey()] = { done: s.doneCount, total: s.total, counts: s.counts };
   saveHistory();
   progressEl.textContent = `${s.percent}% done, ${s.counts ? "today counts ✅" : "keep going"}`;
+  updateRestUI();
 }
 
 render();
