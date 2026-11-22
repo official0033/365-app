@@ -57,3 +57,41 @@ body {
 }
 
 #progress { font-weight: 600; }
+
+[hidden] { display: none !important; }
+
+#rest-section {
+  margin-top: 64px;
+  padding-top: 16px;
+  border-top: 1px solid #ccc;
+}
+
+#rest-section h2 { font-size: 1rem; color: #666; }
+
+.rest-btn {
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  border: 1px solid #999;
+  border-radius: 8px;
+  background: #fff;
+  color: #444;
+}
+
+#rest-confirm {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #c0392b;
+  border-radius: 10px;
+  background: #fff;
+}
+
+#rest-confirm button {
+  margin-right: 8px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+}
+
+#rest-yes { background: #c0392b; color: #fff; }
+#rest-no { background: #ddd; color: #333; }

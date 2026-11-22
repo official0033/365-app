@@ -157,7 +157,7 @@ EX : ratio takes .769 & there same thing in percentage takes 77 .
      here ratio does the task perfectly while percentage makes it wrong 
 
 - **Why does the app save `lastDate`, and what would happen without it?**
-~~ it saves last date because we don't have any other way to know new a new day beganed. 
+~~ it saves last date because we don't have any other way to know new a new day begins. 
 Also when new day start and you open app ,it checks whether the date is same or not, then proceeds to uncheck all the tasks.
 Without lastDate, yesterday’s ticks would still be ticked today, and every day would look the same.
 

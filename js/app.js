@@ -1,11 +1,44 @@
+// all constants important for implementing later
 const todayEl = document.getElementById("today");
 const date = new Date();
 const THRESHOLD = 0.77;
+const MAX_REST = 3;
 const progressEl = document.getElementById("progress");
+const restInfo = document.getElementById("rest-info");
+const restTodayBtn = document.getElementById("rest-today-btn");
+const restTomorrowBtn = document.getElementById("rest-tomorrow-btn");
+const restConfirm = document.getElementById("rest-confirm");
+const restMsg = document.getElementById("rest-msg");
+const restYes = document.getElementById("rest-yes");
+const restNo = document.getElementById("rest-no");
+
+//codes for Rest day only.
+let pendingKey = null;
+restTodayBtn.addEventListener("click", () => {
+    pendingKey = getTodayKey();
+    restMsg.textContent = "Use a rest day for today? This cannot be undone.";
+    restConfirm.hidden = false;
+});
+restTomorrowBtn.addEventListener("click",() => {
+    pendingKey = shiftKey(getTodayKey(),1);
+    restMsg.textContent = "Use a rest day for tomorrow? This cannot be undone.";
+    restConfirm.hidden = false;
+});
+restNo.addEventListener("click",() => {
+    restConfirm.hidden = true;
+    pendingKey = null;
+});
+restYes.addEventListener("click",() => {
+    addRestDay(pendingKey);
+    restConfirm.hidden = true;
+    pendingKey = null;
+    updateRestUI();
+});
+//..............................................................
 
 todayEl.textContent = date.toLocaleDateString("en-GB", {
     weekday:"short" , day:"numeric", month:"short" , year:"numeric"
-})
+});
 
 function dateToKey(date) {
     const year = date.getFullYear()
@@ -63,6 +96,28 @@ if (lastDate !== getTodayKey()) {
     saveTasks()
 }
 
+let restDays = [];
+const restSave = localStorage.getItem("restDays");
+if (restSave) {
+    restDays = JSON.parse(restSave)
+}
+
+
+function getStreak() {
+    let streak = 0
+    const todayRec = history[getTodayKey()]
+    if (todayRec && todayRec.counts) {
+        streak++;
+    }
+    let key = shiftKey(getTodayKey(), -1) // key = the last day's date.
+    while (history[key] && history[key].counts) {
+        streak++;
+        key = shiftKey(key, -1) 
+        //if tab freezes close it then re-correct the while loop and reopen tab.
+    }
+    return streak;
+}
+
 function render(){
     taskList.innerHTML = "";
     tasks.forEach((task) => {
@@ -79,7 +134,6 @@ function render(){
         label.append(`${task.text}`,input);
         li.appendChild(label);
         taskList.appendChild(li);
-
     })
 }
 
@@ -92,6 +146,26 @@ function saveHistory(){
     localStorage.setItem("history", JSON.stringify(history))
 }
 
+// functions for rest days. 
+function saveRestDays() {
+    localStorage.setItem("restDays", JSON.stringify(restDays));
+}
+function restUsedInMonth(key) {
+    return restDays.filter((d) => d.slice(0,7) === key.slice(0,7)).length;
+}
+function addRestDay(key) {
+    if (key !== getTodayKey() && key !== shiftKey(getTodayKey(), 1)) {return false;}
+    if (restDays.includes(key)) {return false;}
+    if (restUsedInMonth(key) >= MAX_REST) {return false;}
+    restDays.push(key);
+    saveRestDays();
+    return true;
+}
+function updateRestUI() {
+    const left = MAX_REST - restUsedInMonth(getTodayKey());
+    restInfo.textContent = `Rest days left this month: ${left} of ${MAX_REST}`;
+}
+//........................................................
 
 function getStats() {
   const total = tasks.length;
@@ -109,7 +183,9 @@ function updateToday() {
   const s = getStats();
   history[getTodayKey()] = { done: s.doneCount, total: s.total, counts: s.counts };
   saveHistory();
-  progressEl.textContent = `${s.percent}% done, ${s.counts ? "today counts ✅" : "keep going"}`;}
+  progressEl.textContent = `${s.percent}% done, ${s.counts ? "today counts ✅" : "keep going"}`;
+}
 
-render()
-updateToday()
+render();
+updateToday();
+updateRestUI();
