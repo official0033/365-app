@@ -4,6 +4,7 @@ const date = new Date();
 const THRESHOLD = 0.77;
 const MAX_REST = 3;
 const progressEl = document.getElementById("progress");
+const streakEL = document.getElementById("streak");
 const restInfo = document.getElementById("rest-info");
 const restTodayBtn = document.getElementById("rest-today-btn");
 const restTomorrowBtn = document.getElementById("rest-tomorrow-btn");
@@ -33,11 +34,11 @@ restYes.addEventListener("click",() => {
     addRestDay(pendingKey);
     restConfirm.hidden = true;
     pendingKey = null;
-    updateRestUI();
+    updateToday();
 });
 restUndoBtn.addEventListener("click",() => {
     removeRestDay(shiftKey(getTodayKey(),1));
-    updateRestUI();
+    updateToday();
 })
 //..............................................................
 
@@ -109,13 +110,15 @@ if (lastDate !== getTodayKey()) {
 
 function getStreak() {
     let streak = 0
-    const todayRec = history[getTodayKey()]
-    if (todayRec && todayRec.counts) {
+    const todayRec = history[getTodayKey()];
+    if (todayRec && todayRec.counts && !restDays.includes(getTodayKey())) {
         streak++;
     }
     let key = shiftKey(getTodayKey(), -1) // key = the last day's date.
-    while (history[key] && history[key].counts) {
-        streak++;
+    while (restDays.includes(key) || (history[key] && history[key].counts)) {
+        if (!restDays.includes(key)) {
+            streak++;
+        }
         key = shiftKey(key, -1) 
         //if tab freezes close it then re-correct the while loop and reopen tab.
     }
@@ -200,6 +203,7 @@ function updateToday() {
   history[getTodayKey()] = { done: s.doneCount, total: s.total, counts: s.counts };
   saveHistory();
   progressEl.textContent = `${s.percent}% done, ${s.counts ? "today counts ✅" : "keep going"}`;
+  streakEL.textContent = `Current streak: ${getStreak()} days`;
   updateRestUI();
 }
 

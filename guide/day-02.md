@@ -167,8 +167,8 @@ Reason: according to the formula 2 tasks make it 0.6667 count which is not 77 ac
 Formula: Checked-boxes / total-boxes
 
 - **The hardest moment today was:**
-~~ well it was easy than day-1 ,because the code format are allmost same which makes it faster.
-But the real hard part was the overcoming the lagyness & to stay consistent.
+~~ well it was easy than day-1 ,because the code format are all-most same which makes it faster.
+But the real hard part was the overcoming the lazy-ness & to stay consistent.
 AI made the most tasks easier today. 
 
 ## Mistakes and fixes
